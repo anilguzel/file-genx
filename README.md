@@ -16,14 +16,3 @@ dotnet build
 dotnet run --project src/DistributedFileStorage.App
 ```
 
-Bu ortamda `dotnet` aracı mevcut olmadığından komutlar çalıştırılamamıştır.
-
-### Konsol Uygulaması Kullanımı
-
-Uygulama çalıştırıldığında aşağıdaki komutlar kullanılabilir:
-
-```
-upload <dosya_yolu>           # Dosyayı parçalara ayırıp kaydeder
-rebuild <fileId> <hedef_klasor>  # Belirtilen dosya parçalarını birleştirir
-exit                          # Uygulamadan çıkar
-```
