@@ -4,7 +4,10 @@ Bu proje, `todo.md` dosyasında belirtilen adımların çoğunu kapsayan basit b
 Uygulama .NET 8 kullanımı hedefler ve Clean Architecture prensipleri doğrultusunda 
 Core, Infrastructure, Persistence ve App katmanlarına ayrılmıştır.
 
-"dotnet" yüklenemediği için derleme adımları çalıştırılamamıştır. 
+Metadata artık kalıcı bir SQLite dosyasında saklanır. Uygulamanın
+çalıştırıldığı klasörde `chunks.db` adında bir veritabanı oluşturulur ve
+uygulama ilk çalıştığında otomatik olarak yaratılır.
+"dotnet" yüklenemediği için derleme adımları çalıştırılamamıştır.
 
 ## Kullanım
 

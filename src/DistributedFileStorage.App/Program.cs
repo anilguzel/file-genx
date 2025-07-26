@@ -14,7 +14,8 @@ var host = Host.CreateDefaultBuilder(args)
     .UseSerilog((_, cfg) => cfg.WriteTo.Console())
     .ConfigureServices(services =>
     {
-        services.AddDbContext<ChunkDbContext>(opt => opt.UseInMemoryDatabase("chunks"));
+        var dbPath = Path.Combine(Environment.CurrentDirectory, "chunks.db");
+        services.AddDbContext<ChunkDbContext>(opt => opt.UseSqlite($"Data Source={dbPath}"));
         services.AddScoped<IFileChunker, DynamicFileChunker>();
         services.AddScoped<ChunkRepository>();
         services.AddScoped<IChunkRepository>(sp => sp.GetRequiredService<ChunkRepository>());
@@ -26,7 +27,15 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+
+using (var scope = host.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ChunkDbContext>();
+    db.Database.EnsureCreated();
+}
+
 await host.StartAsync();
+
 
 var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("App");
 logger.LogInformation("DistributedFileStorage started");
