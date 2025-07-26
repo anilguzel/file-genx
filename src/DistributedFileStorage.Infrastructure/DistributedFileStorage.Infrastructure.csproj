@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../DistributedFileStorage.Core/DistributedFileStorage.Core.csproj" />
+    <ProjectReference Include="../DistributedFileStorage.Persistence/DistributedFileStorage.Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="19.0.0" />
+  </ItemGroup>
+</Project>
