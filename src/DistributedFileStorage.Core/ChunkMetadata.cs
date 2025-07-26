@@ -10,6 +10,7 @@ public class ChunkMetadata
     public Guid FileId { get; set; }
     [Key]
     public Guid ChunkId { get; set; }
+    public string OriginalFileName { get; set; } = string.Empty;
     public int ChunkIndex { get; set; }
     public string Checksum { get; set; } = string.Empty;
     public string StorageProviderName { get; set; } = string.Empty;

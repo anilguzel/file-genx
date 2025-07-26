@@ -32,6 +32,7 @@ public class FileUploadService
             {
                 FileId = chunk.FileId,
                 ChunkId = chunk.Id,
+                OriginalFileName = chunk.OriginalFileName,
                 ChunkIndex = chunk.ChunkIndex,
                 Checksum = chunk.Checksum,
                 StorageProviderName = provider.Name,
