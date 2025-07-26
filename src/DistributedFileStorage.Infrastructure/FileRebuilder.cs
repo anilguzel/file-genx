@@ -26,8 +26,12 @@ public class FileRebuilder : IFileRebuilder
             .ToList();
         if (!metadataList.Any())
             throw new InvalidOperationException($"No chunks found for file {fileId}");
-
-        var outputPath = Path.Combine(targetDirectory, fileId.ToString());
+        var originalName = metadataList.First().OriginalFileName;
+        var extension = Path.GetExtension(originalName);
+        var fileName = string.IsNullOrWhiteSpace(extension)
+            ? fileId.ToString()
+            : $"{fileId}{extension}";
+        var outputPath = Path.Combine(targetDirectory, fileName);
         await using var output = File.Create(outputPath);
 
         foreach (var chunk in metadataList)
