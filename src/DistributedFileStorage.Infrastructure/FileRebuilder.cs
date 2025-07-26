@@ -21,25 +21,28 @@ public class FileRebuilder : IFileRebuilder
 
     public async Task<string> RebuildAsync(Guid fileId, string targetDirectory)
     {
-        var metadata = (await _repository.GetChunksAsync(fileId)).OrderBy(c => c.ChunkIndex);
+        var metadataList = (await _repository.GetChunksAsync(fileId))
+            .OrderBy(c => c.ChunkIndex)
+            .ToList();
+        if (!metadataList.Any())
+            throw new InvalidOperationException($"No chunks found for file {fileId}");
+
         var outputPath = Path.Combine(targetDirectory, fileId.ToString());
         await using var output = File.Create(outputPath);
 
-        using var sha = SHA256.Create();
-        foreach (var chunk in metadata)
+        foreach (var chunk in metadataList)
         {
             var provider = _factory.GetProvider(chunk.StorageProviderName);
             var dataChunk = await provider.RetrieveAsync(chunk.ChunkId);
-            if (dataChunk == null) throw new FileNotFoundException($"Chunk {chunk.ChunkId} not found");
-            await output.WriteAsync(dataChunk.Data);
-            sha.TransformBlock(dataChunk.Data, 0, dataChunk.Data.Length, null, 0);
-        }
-        sha.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
-        var checksum = Convert.ToHexString(sha.Hash!);
+            if (dataChunk == null)
+                throw new FileNotFoundException($"Chunk {chunk.ChunkId} not found");
 
-        var original = metadata.FirstOrDefault()?.Checksum;
-        if (original != null && !original.Equals(checksum, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Checksum mismatch");
+            var computed = Convert.ToHexString(SHA256.HashData(dataChunk.Data));
+            if (!chunk.Checksum.Equals(computed, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException($"Checksum mismatch for chunk {chunk.ChunkId}");
+
+            await output.WriteAsync(dataChunk.Data);
+        }
 
         return outputPath;
     }
