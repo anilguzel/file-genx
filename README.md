@@ -16,4 +16,3 @@ dotnet build
 dotnet run --project src/DistributedFileStorage.App
 ```
 
-Bu ortamda `dotnet` aracı mevcut olmadığından komutlar çalıştırılamamıştır.
