@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DistributedFileStorage.Core;
 
 public class ChunkMetadata
 {
     public Guid FileId { get; set; }
+    [Key]
     public Guid ChunkId { get; set; }
     public int ChunkIndex { get; set; }
     public string Checksum { get; set; } = string.Empty;
